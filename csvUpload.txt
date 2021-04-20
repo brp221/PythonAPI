@@ -1,0 +1,35 @@
+# When logged into ArcGIS Online, this will log you into your portal
+from arcgis.gis import GIS
+gis = GIS("home")
+
+# Load buildings feature layer collection
+build_flc = gis.content.get("63f416365ecf4fdb976e3296dab0bf74")
+build_flc
+
+# Assign layer object
+build_lyr = build_flc.layers[0]
+# Assign table object
+build_tbl = build_flc.tables[0]
+
+# Query without any conditions returns all the features
+build_fset = build_tbl.query()
+# Print number of features
+build_fset
+
+csv_file = 'https://raw.githubusercontent.com/brp221/PythonAPI/main/eigmeter1-shm-bldg69_infra_lehigh_edu.csv'
+#Jeremy's csv file
+#csv_file = 'https://raw.githubusercontent.com/jeremymack-LU/energy_dashboard/master/data/energy_new_data.csv'
+csv_item = gis.content.add({}, csv_file)
+
+csv_item
+csv_item.move('Energy_Dashboard')
+csv_item.id
+
+para1 = gis.content.analyze(item=csv_item.id)
+
+build_tbl.append(item_id = csv_item.id, upload_format = 'csv', source_info = para1, upsert=False)
+
+# Query without any conditions returns all the features
+build_fset = build_tbl.query()
+# Print number of features
+build_fset
